@@ -1,0 +1,22 @@
+# ninja log v5
+0	623	1680032720830865789	CMakeFiles/Project.dir/main.cpp.o	e8836587a2484fc4
+466	1162	1680032732442815252	CMakeFiles/Project.dir/OpenGLCanvas.cpp.o	969650974d77c482
+1	144	1680032731422819695	CMakeFiles/Project.dir/mesh.cpp.o	b1a711d21fc3fc89
+549	1226	1680032732502814990	CMakeFiles/Project.dir/OpenGLCamera.cpp.o	5d31876a7dc2fd49
+1	466	1680032731746818284	CMakeFiles/Project.dir/matrix.cpp.o	a6613a2cd542ef77
+1	79	1680038288259612223	build.ninja	cf140bc98025606c
+145	872	1680032732150816524	CMakeFiles/Project.dir/OpenGLRenderer.cpp.o	b69296cb5aedc99a
+1	549	1680032731826817935	CMakeFiles/Project.dir/argparser.cpp.o	372a023434ca1d1c
+1	518	1680032720726866241	CMakeFiles/Project.dir/meshdata.cpp.o	58c33e4b34cf5f9b
+0	259	1680038288259612223	build.ninja	cf140bc98025606c
+2	147	1680038288419611736	CMakeFiles/Project.dir/mesh.cpp.o	a845446c31fb0cea
+2	385	1680038288655611017	CMakeFiles/Project.dir/matrix.cpp.o	39dbc8bc39926be0
+1	614	1680038288883610324	CMakeFiles/Project.dir/main.cpp.o	43d62ee2a0b2e0ef
+148	878	1680038289147609519	CMakeFiles/Project.dir/OpenGLRenderer.cpp.o	c564d4056c58f120
+385	1104	1680038289375608825	CMakeFiles/Project.dir/OpenGLCanvas.cpp.o	5f5e194ae47c47ed
+615	1364	1680038289635608032	CMakeFiles/Project.dir/OpenGLCamera.cpp.o	590ae8254c7b8509
+1104	1398	1680038289667607935	CMakeFiles/Project.dir/meshdata.cpp.o	731394346034be2d
+879	1402	1680038289671607923	CMakeFiles/Project.dir/argparser.cpp.o	37846eff2f418ac3
+1402	1571	1680038289839607411	Project	138206056011cfe4
+2	678	1680038470299026639	CMakeFiles/Project.dir/OpenGLCanvas.cpp.o	5f5e194ae47c47ed
+678	803	1680038470423026220	Project	138206056011cfe4
