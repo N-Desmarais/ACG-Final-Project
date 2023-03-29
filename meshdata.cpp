@@ -45,6 +45,11 @@ void MeshData::Load(std::string input_file) {
   uint32_t posIdxs[3];
   bool gotVerts = false, gotFaces = false;
 
+  miniply::PLYElement* faceElem = reader.get_element(reader.find_element(miniply::kPLYFaceElement));
+  if (faceElem == nullptr) {
+    exit(1);
+  }
+  faceElem->convert_list_to_fixed_size(faceElem->find_property("vertex_indices"), 3, faceIdxs);
 
   while (reader.has_element() && (!gotVerts || !gotFaces)) {
     if (reader.element_is(miniply::kPLYVertexElement) && reader.load_element() && reader.find_pos(posIdxs)) {
