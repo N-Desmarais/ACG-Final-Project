@@ -57,4 +57,18 @@ void Mesh::packMesh(MeshData *data) {
     memcpy(current, &tc, sizeof(float)*12); current += 12;
   }
 
+  bbox = BoundingBox();
+
+  for(int i = 0; i < num_vertices; i++) {
+    bbox.Extend(vertices_ptr[i].getPos());
+  }
+
+  Vec3f center;
+  bbox.getCenter(center);
+
+  data->bb_center.data[0] = center.x();
+  data->bb_center.data[1] = center.y();
+  data->bb_center.data[2] = center.z();
+
+  data->bb_scale = 1.8 / float(bbox.maxDim());
 }

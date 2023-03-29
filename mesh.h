@@ -8,6 +8,7 @@
 #include "triangle.h"
 #include "memory"
 #include "meshdata.h"
+#include "boundingbox.h"
 
 #ifndef PROJECT__MESH_H_
 #define PROJECT__MESH_H_
@@ -31,6 +32,7 @@ class Mesh {
   int num_triangles;
   int num_data;
 
+  BoundingBox bbox;
   ArgParser *args;
 
   void packMesh(MeshData * data);
