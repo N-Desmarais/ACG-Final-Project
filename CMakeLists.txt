@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1.1)
 project(Project)
 
-add_executable(Project main.cpp argparser.cpp argparser.h meshdata.cpp meshdata.h vertex.h vectors.h matrix.cpp matrix.h mesh.cpp mesh.h OpenGLRenderer.cpp OpenGLRenderer.h OpenGLCanvas.cpp OpenGLCanvas.h OpenGLCamera.cpp OpenGLCamera.h boundingbox.h)
+add_executable(Project main.cpp argparser.cpp argparser.h meshdata.cpp meshdata.h vertex.h vectors.h matrix.cpp matrix.h mesh.cpp mesh.h OpenGLRenderer.cpp OpenGLRenderer.h OpenGLCanvas.cpp OpenGLCanvas.h OpenGLCamera.cpp OpenGLCamera.h boundingbox.h miniply.cpp miniply.h triangle.h)
 
 set(my_executable Project)
 

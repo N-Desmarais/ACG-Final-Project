@@ -11,22 +11,10 @@
 
 ArgParser *GLOBAL_args;
 
-void ArgParser::DefaultValues() {
-
-  // INPUT FILE
-  input_file = "";
-  path = "";
-
-  // RENDERING GEOMETRY
-  mesh_data->triCount = 0;
-  mesh_data->triData = NULL;
-}
-
 
 ArgParser::ArgParser(int argc, const char *argv[], MeshData *_mesh_data) {
 
   mesh_data = _mesh_data;
-  DefaultValues();
 
   // parse the command line arguments
   for (int i = 1; i < argc; i++) {
@@ -45,11 +33,11 @@ ArgParser::ArgParser(int argc, const char *argv[], MeshData *_mesh_data) {
     }
   }
 
-  mesh = new Mesh(this);
-  mesh->Load(path+"/"+input_file);
+  mesh_data->Load(path+"/"+input_file);
 
   GLOBAL_args = this;
 
+  mesh = new Mesh(this);
   mesh->packMesh(mesh_data);
 }
 

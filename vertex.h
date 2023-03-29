@@ -5,47 +5,27 @@
 
 // ==========================================================
 
+// TODO this class doesn't currently serve any purpose
+// should be used for shading later on, work around it for now
+
 class Vertex {
 
  public:
 
-  // ========================
-  // CONSTRUCTOR & DESTRUCTOR
-  Vertex(int i, const Vec3f &pos) : position(pos), index(i) {}
 
-  // =========
-  // ACCESSORS
-  int getIndex() const { return index; }
+  Vertex() : position(Vec3f(0,0,0)) {}
+  Vertex(const Vec3f &pos) : position(pos) {}
+
   double x() const { return position.x(); }
   double y() const { return position.y(); }
   double z() const { return position.z(); }
   const Vec3f& getPos() const { return position; }
-  const Vec3f& getGouraudNormal() const { return gouraud_normal; }
 
-  // =========
-  // MODIFIERS
   void setPos(const Vec3f &v) { position = v; }
-  void clearGouraudNormal() { gouraud_normal = Vec3f(0,0,0); }
-  void incrGouraudNormal(const Vec3f &v) { gouraud_normal += v; }
-  void normalizeGouraudNormal() { gouraud_normal.Normalize(); }
-
-
 
  private:
-
-  // ==============
-  // REPRESENTATION
   Vec3f position;
-  Vec3f gouraud_normal;
 
-  // this is the index from the original .obj file.
-  // technically not part of the half-edge data structure
-  int index;
-
-  // NOTE: the vertices don't know anything about adjacency.  In some
-  // versions of this data structure they have a pointer to one of
-  // their incoming edges.  However, this data is complicated to
-  // maintain during mesh manipulation.
 };
 
 // ==========================================================

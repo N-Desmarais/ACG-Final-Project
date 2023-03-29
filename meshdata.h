@@ -1,8 +1,15 @@
 #ifndef _MESH_DATA_H_
 #define _MESH_DATA_H_
 
+#include "vectors.h"
+#include <memory>
+
 // ====================================================================
 // ====================================================================
+
+struct faceIndex {
+  int data[3];
+};
 
 // a homogeneous 3D point or a color with alpha
 typedef struct float3 {
@@ -31,19 +38,23 @@ typedef struct MeshData {
   int width;
   int height;
   bool perspective;
-  int wireframe;
 
-  int triCount;
-  float* triData;
+  std::unique_ptr<float> vertexPositions;
+  std::unique_ptr<int> faceIndices;
+
+  uint32_t vertexCount;
+  uint32_t positionCount;
+  uint32_t triCount;
+  uint32_t indexCount;
 
   float3 bb_center;
   float bb_scale;
 
+  void Load(std::string input_file);
+
 } MeshData;
 
-
 void INIT_MeshData(MeshData *mesh_data);
-void loadOBJ(MeshData *mesh_data);
 
 // ====================================================================
 // ====================================================================

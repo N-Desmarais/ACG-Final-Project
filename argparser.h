@@ -26,8 +26,6 @@ class ArgParser {
   // helper functions
   void separatePathAndFile(const std::string &input, std::string &path, std::string &file);
 
-  void DefaultValues();
-
   // ==============
   // REPRESENTATION
   // all public! (no accessors)

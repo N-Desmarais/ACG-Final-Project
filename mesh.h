@@ -3,13 +3,17 @@
 //
 
 #include <string>
+#include "miniply.h"
+#include "vertex.h"
+#include "triangle.h"
+#include "memory"
+#include "meshdata.h"
 
 #ifndef PROJECT__MESH_H_
 #define PROJECT__MESH_H_
 
 #endif //PROJECT__MESH_H_
 
-struct MeshData;
 class ArgParser;
 
 class Mesh {
@@ -19,17 +23,15 @@ class Mesh {
   Mesh(ArgParser *a) { args = a; }
   ~Mesh();
 
+  std::unique_ptr<Vertex> vertices;
+  std::unique_ptr<Triangle> triangles;
+  std::unique_ptr<float> tri_data;
+
+  int num_vertices;
   int num_triangles;
-  float * tri_data;
+  int num_data;
+
   ArgParser *args;
 
-  void Load(std::string input_file) {
-    // TODO implement
-    num_triangles = 0;
-    tri_data = nullptr;
-  }
-
-  void packMesh(MeshData * data) {
-    // TODO implement
-  }
+  void packMesh(MeshData * data);
 };
