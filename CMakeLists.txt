@@ -52,6 +52,7 @@ else(PKG_CONFIG_FOUND)
     else(GLFW_FOUND)
     endif(GLFW_FOUND)
 endif(PKG_CONFIG_FOUND)
+message(STATUS "CGAL_LIBRARIES: ${CGAL_LIBRARIES}")
 message(STATUS "OPENGL_LIBRARIES: ${OPENGL_LIBRARIES}")
 message(STATUS "GLEW_LIBRARIES: ${GLEW_LIBRARIES}")
 message(STATUS "GLFW_LIBRARIES: ${GLFW_LIBRARIES}")
@@ -75,7 +76,7 @@ set_property(TARGET ${my_executable} APPEND_STRING PROPERTY LINK_FLAGS "${flags_
 
 if (UNIX)
     # LINUX
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
     set_target_properties (${my_executable} PROPERTIES COMPILE_FLAGS "-g -Wall -Wextra -pedantic ${BUILD_32}")
 else()
     # WINDOWS

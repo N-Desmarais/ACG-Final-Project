@@ -1,8 +1,13 @@
-#include <string.h>
 #include <random>
-
 #include "meshdata.h"
 #include "argparser.h"
+
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Surface_mesh.h>
+
+typedef CGAL::Simple_cartesian<double> K;
+typedef CGAL::Surface_mesh<K::Point_3> CGAL_MESH;
+
 
 
 // ====================================================================
@@ -75,4 +80,13 @@ void MeshData::Load(std::string input_file) {
   if (!gotVerts || !gotFaces) {
     exit(1);
   }
+
+  CGAL_MESH m;
+  std::ifstream input;
+  input.open(input_file);
+  if(!CGAL::IO::read_PLY(input,m)) {
+      exit(1);
+  }
+
+  return;
 }
