@@ -19,6 +19,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "C:\\GraphicsLibraries")
 
 # make sure all of the necessary graphics libraries are available
+find_package(CGAL REQUIRED)
+if(CGAL_FOUND)
+    include_directories(${CGAL_INCLUDE_DIRS})
+    target_link_libraries(${my_executable} ${CGAL_LIBRARIES} )
+endif(CGAL_FOUND)
 find_package(OpenGL REQUIRED)
 if(OPENGL_FOUND)
     include_directories(${OPENGL_INCLUDE_DIRS})
