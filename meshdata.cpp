@@ -4,10 +4,15 @@
 
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Surface_mesh.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Polyhedron_3.h>
+#include <CGAL/boost/graph/copy_face_graph.h>
 
 typedef CGAL::Simple_cartesian<double> K;
 typedef CGAL::Surface_mesh<K::Point_3> CGAL_MESH;
 
+typedef CGAL::Exact_predicates_inexact_constructions_kernel Ke;
+typedef CGAL::Polyhedron_3<Ke> Polyhedron;
 
 
 // ====================================================================
@@ -87,6 +92,10 @@ void MeshData::Load(std::string input_file) {
   if(!CGAL::IO::read_PLY(input,m)) {
       exit(1);
   }
+
+  Polyhedron polyhedron;
+
+  CGAL::copy_face_graph(m, polyhedron);
 
   return;
 }
