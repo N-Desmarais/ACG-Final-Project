@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.1.1)
 project(Project)
 
-add_executable(Project main.cpp argparser.cpp argparser.h meshdata.cpp meshdata.h vertex.h vectors.h matrix.cpp matrix.h mesh.cpp mesh.h OpenGLRenderer.cpp OpenGLRenderer.h OpenGLCanvas.cpp OpenGLCanvas.h OpenGLCamera.cpp OpenGLCamera.h boundingbox.h miniply.cpp miniply.h triangle.h)
+
+set(CMAKE_BUILD_TYPE Release)
+
+add_executable(Project main.cpp argparser.cpp argparser.h meshdata.cpp meshdata.h vertex.h vectors.h matrix.cpp matrix.h mesh.cpp mesh.h OpenGLRenderer.cpp OpenGLRenderer.h OpenGLCanvas.cpp OpenGLCanvas.h OpenGLCamera.cpp OpenGLCamera.h boundingbox.h triangle.h)
+
 
 set(my_executable Project)
-
 set(OpenGL_GL_PREFERENCE GLVND)
 
 # http://glm.g-truc.net/0.9.5/updates.html

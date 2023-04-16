@@ -4,6 +4,14 @@
 #include "vectors.h"
 #include <memory>
 
+#include <CGAL/Surface_mesh.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Polyhedron_3.h>
+
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+typedef CGAL::Surface_mesh<K::Point_3> CGAL_MESH;
+typedef CGAL::Polyhedron_3<K> Polyhedron;
+
 // ====================================================================
 // ====================================================================
 
@@ -39,8 +47,9 @@ typedef struct MeshData {
   int height;
   bool perspective;
 
-  std::unique_ptr<float> vertexPositions;
-  std::unique_ptr<int> faceIndices;
+  std::vector<float> vertexPositions;
+  std::vector<uint32_t> faceIndices;
+  Polyhedron polyhedron;
 
   uint32_t vertexCount;
   uint32_t positionCount;

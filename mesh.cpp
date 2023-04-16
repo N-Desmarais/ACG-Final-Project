@@ -5,39 +5,37 @@
 #include <cstring>
 #include "mesh.h"
 
+typedef CGAL::Mesh_criteria_3<Tr> Mesh_criteria;
+using namespace CGAL::parameters;
+
 void Mesh::packMesh(MeshData *data) {
+
+  triangulate3D(data->polyhedron);
 
   num_vertices = data->vertexCount;
   num_triangles = data->triCount;
   num_data = 12 * 3 * num_triangles;
-
-  vertices = std::unique_ptr<Vertex>(new Vertex[num_vertices]);
-  triangles = std::unique_ptr<Triangle>(new Triangle[num_triangles]);
   tri_data = std::unique_ptr<float>(new float[num_data]);
 
-  auto vertices_ptr = vertices.get();
-  auto positions_ptr = data->vertexPositions.get();
-  auto data_ptr = tri_data.get();
+  auto positions = data->vertexPositions;
+  auto indices = data->faceIndices;
 
   for(uint32_t ind = 0; ind < data->positionCount; ind += 3) {
-    auto pos = Vec3f(positions_ptr[ind],positions_ptr[ind+1],positions_ptr[ind+2]);
-    vertices_ptr[ind/3] = Vertex(pos);
+    auto pos = Vec3f(positions[ind],positions[ind+1],positions[ind+2]);
+    vertices.push_back(Vertex(pos));
   }
-
-  auto triangles_ptr = triangles.get();
-  auto indices_ptr = data->faceIndices.get();
 
   for(uint32_t ind = 0; ind < data->indexCount; ind += 3) {
-    auto v1 = &vertices_ptr[indices_ptr[ind]],
-         v2 = &vertices_ptr[indices_ptr[ind+1]],
-         v3 = &vertices_ptr[indices_ptr[ind+2]];
-    triangles_ptr[ind/3] = Triangle(v1,v2,v3);
+    auto v1 = &vertices[indices[ind]],
+         v2 = &vertices[indices[ind+1]],
+         v3 = &vertices[indices[ind+2]];
+    triangles.push_back(Triangle(v1,v2,v3));
   }
 
-  float * current = data_ptr;
+  float * current = tri_data.get();
 
   for(int tri = 0; tri < num_triangles; tri++) {
-    Triangle t = triangles_ptr[tri];
+    Triangle t = triangles[tri];
 
     Vec3f a = t[0]->getPos();
     Vec3f b = t[1]->getPos();
@@ -60,7 +58,7 @@ void Mesh::packMesh(MeshData *data) {
   bbox = BoundingBox();
 
   for(int i = 0; i < num_vertices; i++) {
-    bbox.Extend(vertices_ptr[i].getPos());
+    bbox.Extend(vertices[i].getPos());
   }
 
   Vec3f center;
@@ -71,4 +69,14 @@ void Mesh::packMesh(MeshData *data) {
   data->bb_center.data[2] = center.z();
 
   data->bb_scale = 1.8 / float(bbox.maxDim());
+}
+void Mesh::triangulate3D(Polyhedron polyhedron) {
+  Mesh_domain domain(polyhedron);
+  // Mesh criteria (no cell_size set)
+  Mesh_criteria criteria(facet_angle=25, facet_size=0.15, facet_distance=0.008,
+                         cell_radius_edge_ratio=3);
+  // Mesh generation
+  C3t3 delauney = CGAL::make_mesh_3<C3t3>(domain, criteria, no_perturb(), no_exude());
+
+  CGAL::IO::output_to_tetgen("Armadillo", delauney, false, true);
 }
