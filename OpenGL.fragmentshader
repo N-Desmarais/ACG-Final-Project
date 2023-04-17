@@ -44,9 +44,6 @@ void main() {
   vec3 MaterialAmbientColor = vec3(0.2,0.2,0.2) * MaterialDiffuseColor;
   vec3 MaterialSpecularColor = vec3(0.1,0.1,0.1);
   if(!gl_FrontFacing ) {
-    MaterialDiffuseColor = vec3(0.0,0.0,0.6);
-    MaterialAmbientColor = vec3(0.3,0.3,0.3) * MaterialDiffuseColor;
-    MaterialSpecularColor = vec3(0.1,0.1,0.3);
     n = -n;
   }
 
