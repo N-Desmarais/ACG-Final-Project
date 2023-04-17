@@ -4,7 +4,7 @@ project(Project)
 
 set(CMAKE_BUILD_TYPE Release)
 
-add_executable(Project main.cpp argparser.cpp argparser.h meshdata.cpp meshdata.h vertex.h vectors.h matrix.cpp matrix.h mesh.cpp mesh.h OpenGLRenderer.cpp OpenGLRenderer.h OpenGLCanvas.cpp OpenGLCanvas.h OpenGLCamera.cpp OpenGLCamera.h boundingbox.h triangle.h)
+add_executable(Project main.cpp argparser.cpp argparser.h meshdata.cpp meshdata.h vertex.h vectors.h matrix.cpp matrix.h mesh.cpp mesh.h OpenGLRenderer.cpp OpenGLRenderer.h OpenGLCanvas.cpp OpenGLCanvas.h OpenGLCamera.cpp OpenGLCamera.h boundingbox.h triangle.h triangulator.h)
 
 
 set(my_executable Project)

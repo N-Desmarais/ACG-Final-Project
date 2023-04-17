@@ -1,9 +1,9 @@
 #ifndef _MESH_DATA_H_
 #define _MESH_DATA_H_
 
-#include "vectors.h"
 #include <memory>
 
+#include "vectors.h"
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Polyhedron_3.h>
@@ -48,13 +48,15 @@ typedef struct MeshData {
   bool perspective;
 
   std::vector<float> vertexPositions;
-  std::vector<uint32_t> faceIndices;
-  Polyhedron polyhedron;
+  std::vector<uint32_t> triIndices;
+  std::vector<uint32_t> tetIndices;
 
   uint32_t vertexCount;
   uint32_t positionCount;
   uint32_t triCount;
-  uint32_t indexCount;
+  uint32_t triIndCount;
+  uint32_t tetCount;
+  uint32_t tetIndCount;
 
   float3 bb_center;
   float bb_scale;

@@ -3,14 +3,13 @@
 // ================================================================
 
 #include <iostream>
-#include "argparser.h"
-#include "meshdata.h"
 #include <glm/gtc/type_ptr.hpp>
 
-
+#include "argparser.h"
+#include "meshdata.h"
+#include "triangulator.h"
 
 ArgParser *GLOBAL_args;
-
 
 ArgParser::ArgParser(int argc, const char *argv[], MeshData *_mesh_data) {
 
@@ -26,12 +25,19 @@ ArgParser::ArgParser(int argc, const char *argv[], MeshData *_mesh_data) {
       mesh_data->width = atoi(argv[i]);
       i++; assert (i < argc);
       mesh_data->height = atoi(argv[i]);
+    } else if (std::string(argv[i]) == std::string("--triangulate")) {
+      i++; assert (i < argc);
+      auto input = std::string(argv[i]);
+      i++; assert (i < argc);
+      auto output = std::string(argv[i]);
+      Triangulator::Triangulate(input, output);
+      exit(0);
     } else {
-      std::cout << "ERROR: unknown command line argument "
-                << i << ": '" << argv[i] << "'" << std::endl;
-      exit(1);
+        std::cout << "ERROR: unknown command line argument "
+        << i << ": '" << argv[i] << "'" << std::endl;
+        exit(1);
+      }
     }
-  }
 
   mesh_data->Load(path+"/"+input_file);
 

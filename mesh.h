@@ -10,15 +10,15 @@
 #include "boundingbox.h"
 
 
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Mesh_triangulation_3.h>
-#include <CGAL/Mesh_complex_3_in_triangulation_3.h>
-#include <CGAL/Polyhedron_3.h>
-#include <CGAL/Polyhedral_mesh_domain_3.h>
-#include <CGAL/Mesh_criteria_3.h>
-#include <CGAL/make_mesh_3.h>
-#include <CGAL/boost/graph/helpers.h>
-#include <CGAL/IO/File_tetgen.h>
+#include "CGAL/Exact_predicates_inexact_constructions_kernel.h"
+#include "CGAL/Mesh_triangulation_3.h"
+#include "CGAL/Mesh_complex_3_in_triangulation_3.h"
+#include "CGAL/Polyhedron_3.h"
+#include "CGAL/Polyhedral_mesh_domain_3.h"
+#include "CGAL/Mesh_criteria_3.h"
+#include "CGAL/make_mesh_3.h"
+#include "CGAL/boost/graph/helpers.h"
+#include "CGAL/IO/File_tetgen.h"
 
 
 #ifndef PROJECT__MESH_H_
@@ -48,9 +48,7 @@ class Mesh {
 
   Mesh(ArgParser *a) { args = a; }
   ~Mesh();
-
-
-
+  
   std::vector<Vertex> vertices;
   std::vector<Triangle> triangles;
   std::unique_ptr<float> tri_data;
@@ -63,7 +61,6 @@ class Mesh {
   ArgParser *args;
 
   void packMesh(MeshData * data);
-  void triangulate3D(Polyhedron polyhedron);
 };
 
 #endif //PROJECT__MESH_H_
