@@ -53,8 +53,8 @@ class Triangulator {
 
     Mesh_domain domain(polyhedron);
     // Mesh criteria (no cell_size set)
-    Mesh_criteria criteria(facet_angle=25, facet_size=0.15, facet_distance=0.008,
-                           cell_radius_edge_ratio=3);
+    Mesh_criteria criteria(facet_angle=30, facet_size=10, facet_distance=1,
+                           cell_radius_edge_ratio=2, cell_size=10);
     // Mesh generation
     C3t3 delauney = CGAL::make_mesh_3<C3t3>(domain, criteria, no_perturb(), no_exude(), manifold());
 
