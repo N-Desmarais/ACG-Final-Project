@@ -43,8 +43,14 @@ ArgParser::ArgParser(int argc, const char *argv[], MeshData *_mesh_data) {
 
   GLOBAL_args = this;
 
-  mesh = new Mesh(this);
+  mesh = new fractureMesh(mesh_data, 0.001);
   mesh->packMesh(mesh_data);
+}
+
+void ArgParser::Load() {
+    delete mesh;
+    mesh = new fractureMesh(mesh_data, 0.001);
+    mesh->packMesh(mesh_data);
 }
 
 void ArgParser::separatePathAndFile(const std::string &input, std::string &path, std::string &file) {

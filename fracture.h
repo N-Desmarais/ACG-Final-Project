@@ -9,6 +9,7 @@
 
 #include "vectors.h"
 #include "meshdata.h"
+#include "boundingbox.h"
 
 class fractureElement;
 
@@ -67,7 +68,16 @@ private:
 };
 
 class fractureMesh {
+ public:
     fractureMesh(MeshData * data, float timestep);
+
+    void animate();
+    void packMesh(MeshData *data);
+
+    // public so it can be seen by renderer
+    std::unique_ptr<float> tri_data;
+    uint32_t numTriangles;
+ private:
     // animation constants
     float timestep;
     // FEM representation
@@ -76,12 +86,7 @@ class fractureMesh {
     // Mesh representation
     uint32_t numNodes;
     uint32_t numElements;
-    uint32_t numTriangles;
-
-    void animate();
-    void packMesh();
-
-
+    BoundingBox bbox;
 };
 
 #endif //PROJECT_FRACTURE_H

@@ -108,7 +108,7 @@ void OpenGLRenderer::setupMesh() {
   glGenBuffers(1, &VboId);
   glBindBuffer(GL_ARRAY_BUFFER, VboId);
 
-  int sizeOfVertices = 3*sizeof(glm::vec4) * mesh_data->triCount * 3;
+  int sizeOfVertices = 3*sizeof(glm::vec4) * GLOBAL_args->mesh->numTriangles;
   glBufferData(GL_ARRAY_BUFFER, sizeOfVertices, GLOBAL_args->mesh->tri_data.get(), GL_STATIC_DRAW);
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 3*sizeof(glm::vec4), 0);
@@ -123,7 +123,7 @@ void OpenGLRenderer::drawMesh() const {
   //std::cout << "draw mesh" << std::endl;
 
   HandleGLError("in drawMesh");
-  glDrawArrays(GL_TRIANGLES, 0, 3 * mesh_data->triCount);
+  glDrawArrays(GL_TRIANGLES, 0, 3 * GLOBAL_args->mesh->numTriangles);
   HandleGLError("leaving drawMesh");
 }
 

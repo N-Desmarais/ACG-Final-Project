@@ -10,6 +10,7 @@ void INIT_MeshData(MeshData *mesh_data) {
   mesh_data->height = 400;
   mesh_data->perspective = true;
   mesh_data->triCount = 0;
+  mesh_data->animate = false;
 }
 
 // NOTE: These functions are called by the Objective-C code, so we
@@ -22,6 +23,24 @@ extern "C" {
   void PackMesh() {
     printf ("Pack Mesh\n");
     GLOBAL_args->mesh->packMesh(GLOBAL_args->mesh_data);
+  }
+
+  void Step() {
+    GLOBAL_args->mesh->animate();
+    PackMesh();
+  }
+
+  void Animate() {
+    if(GLOBAL_args->mesh_data->animate){
+      for (int i = 0; i < 10; i++) {
+        Step();
+      }
+      PackMesh();
+    }
+  }
+
+  void Load() {
+    GLOBAL_args->Load();
   }
 }
 
@@ -71,9 +90,9 @@ void MeshData::Load(std::string input_file) {
   uint32_t v1,v2,v3;
 
   while (infile >> ind >> v1 >> v2 >> v3) {
-    triIndices.push_back(v1);
-    triIndices.push_back(v2);
-    triIndices.push_back(v3);
+    triIndices.push_back(v1-1);
+    triIndices.push_back(v2-1);
+    triIndices.push_back(v3-1);
   }
   infile.close();
 
@@ -89,10 +108,10 @@ void MeshData::Load(std::string input_file) {
   uint32_t v4;
 
   while(infile >> ind >> v1 >> v2 >> v3 >> v4) {
-    tetIndices.push_back(v1);
-    tetIndices.push_back(v2);
-    tetIndices.push_back(v3);
-    tetIndices.push_back(v4);
+    tetIndices.push_back(v1-1);
+    tetIndices.push_back(v2-1);
+    tetIndices.push_back(v3-1);
+    tetIndices.push_back(v4-1);
   }
   infile.close();
 

@@ -63,6 +63,8 @@ typedef struct MeshData {
 
   void Load(std::string input_file);
 
+  bool animate;
+
 } MeshData;
 
 void INIT_MeshData(MeshData *mesh_data);

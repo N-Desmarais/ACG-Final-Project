@@ -6,6 +6,13 @@
 #include "OpenGLCamera.h"
 #include "OpenGLRenderer.h"
 
+extern "C" {
+void Animate();
+void Step();
+void Load();
+void PackMesh();
+}
+
 // ========================================================
 // static variables of OpenGLCanvas class
 
@@ -177,28 +184,67 @@ void OpenGLCanvas::mousemotionCB(GLFWwindow */*window*/, double x, double y) {
 // (without function name mangling confusion).
 
 extern "C" {
+void Load();
 void Simplification();
 void LoopSubdivision();
 void PackMesh();
 }
 
 void OpenGLCanvas::keyboardCB(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int mods) {
-  // store the modifier keys
-  shiftKeyPressed = (GLFW_MOD_SHIFT & mods);
-  controlKeyPressed = (GLFW_MOD_CONTROL & mods);
-  altKeyPressed = (GLFW_MOD_ALT & mods);
-  superKeyPressed = (GLFW_MOD_SUPER & mods);
-  // non modifier key actions
-  if (action == GLFW_PRESS && key < 256) {
+    // store the modifier keys
+    shiftKeyPressed = (GLFW_MOD_SHIFT & mods);
+    controlKeyPressed = (GLFW_MOD_CONTROL & mods);
+    altKeyPressed = (GLFW_MOD_ALT & mods);
+    superKeyPressed = (GLFW_MOD_SUPER & mods);
+    // non modifier key actions
     if (key == GLFW_KEY_ESCAPE || key == 'q' || key == 'Q') {
-      // polite quit (doesn't always work)
-      glfwSetWindowShouldClose(OpenGLCanvas::window, GL_TRUE);
-      // force quit
-      exit(0);
-    } else {
-      std::cout << "UNKNOWN KEYBOARD INPUT  '" << (char)key << "'" << std::endl;
+        glfwSetWindowShouldClose(OpenGLCanvas::window, GL_TRUE);
+        // force quit
+        exit(0);
     }
-  }
+    if (action == GLFW_PRESS && key < 256) {
+        switch (key) {
+            case 'a': case 'A':
+                // start continuous animation
+                if (!mesh_data->animate) {
+                    printf ("animation started, press 'X' to stop\n");
+                    mesh_data->animate = true;
+                }
+                break;
+            case 'x': case 'X':
+                // stop continuous animation
+                if (mesh_data->animate) {
+                    printf ("animation stopped, press 'A' to start\n");
+                    mesh_data->animate = false;
+                }
+                break;
+            case ' ':
+                // a single step of animation
+                mesh_data->animate = false;
+                printf ("press 'A' to start continuous animation\n");
+                Step();
+                break;
+            case 'r':  case 'R':
+                // reset system
+                Load();
+                break;
+            /*case '+': case '=':
+                std::cout << "timestep doubled:  " << mesh_data->timestep << " -> ";
+                mesh_data->timestep *= 2.0;
+                std::cout << mesh_data->timestep << std::endl;
+                break;
+            case '-': case '_':
+                std::cout << "timestep halved:  " << mesh_data->timestep << " -> ";
+                mesh_data->timestep /= 2.0;
+                std::cout << mesh_data->timestep << std::endl;
+                break;*/
+            case 'q':  case 'Q':
+                exit(0);
+                break;
+            default:
+                std::cout << "UNKNOWN KEYBOARD INPUT  '" << (char)key << "'" << std::endl;
+        }
+    }
 }
 
 // ========================================================

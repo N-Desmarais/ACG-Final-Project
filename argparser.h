@@ -7,7 +7,7 @@
 
 #include <string>
 #include <random>
-#include "mesh.h"
+#include "fracture.h"
 #include "meshdata.h"
 
 class BoundingBox;
@@ -31,10 +31,12 @@ class ArgParser {
   // all public! (no accessors)
 
   MeshData *mesh_data;
-  Mesh *mesh;
+  fractureMesh *mesh;
 
   std::string input_file;
   std::string path;
+
+  void Load();
 };
 
 extern ArgParser *GLOBAL_args;
