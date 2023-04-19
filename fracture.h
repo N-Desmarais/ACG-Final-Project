@@ -63,6 +63,28 @@ public:
 
         return (diff1 * diff2).Dot3(diff3) / 6;
     }
+    //Find if a point is on the same side as the remaining vertex of a tetrahedron plane
+    bool SameSide(Vec3f v1, Vec3f v2, Vec3f v3, Vec3f v4, Vec3f p)
+    {
+        Vec3f normal;
+        Vec3f::Cross3(normal, v2 - v1, v3 - v1);
+        double dotV4 = normal.Dot3(v4 - v1);
+        double dotP = normal.Dot3(p - v1);
+        return (dotV4 * dotP) > 0;
+    }
+    //Check if a point is intersection the fracture node(tetrahedron)
+    bool Intersection(Vec3f p) {
+        Vec3f v1 = nodes[0]->getPosition();
+        Vec3f v2 = nodes[1]->getPosition();
+        Vec3f v3 = nodes[2]->getPosition();
+        Vec3f v4 = nodes[3]->getPosition();
+
+        return SameSide(v1, v2, v3, v4, p) &&
+            SameSide(v2, v3, v4, v1, p) &&
+            SameSide(v3, v4, v1, v2, p) &&
+            SameSide(v4, v1, v2, v3, p);
+    }
+
 private:
     std::vector<fractureNode *> nodes;
 };

@@ -66,10 +66,10 @@ void fractureMesh::animate() {
   }
 
   for(uint32_t i = 0; i < numNodes; i++) {
-    auto particle = nodes[i];
-    particle.setAcceleration(accelerations[i]);
-    particle.setVelocity(velocities[i]);
-    particle.setPosition(positions[i]);
+    auto particle = &nodes[i];
+    particle->setAcceleration(accelerations[i]);
+    particle->setVelocity(velocities[i]);
+    particle->setPosition(positions[i]);
   }
 
 }
