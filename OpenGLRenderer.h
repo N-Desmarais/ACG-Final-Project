@@ -41,7 +41,7 @@ class OpenGLRenderer {
 
 class VertexPosColor {
  public:
-  // by default vertices are set to black
+  // by default nodes are set to black
   VertexPosColor(const glm::vec4 &pos=glm::vec4(0,0,0,1),
                  const glm::vec4 &color=glm::vec4(0,0,0,1)) :
       XYZW(pos),RGBA(color) {}

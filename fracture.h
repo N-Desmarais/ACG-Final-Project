@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "vectors.h"
+#include "meshdata.h"
 
 class fractureElement;
 
@@ -66,10 +67,20 @@ private:
 };
 
 class fractureMesh {
+    fractureMesh(MeshData * data, float timestep);
+    // animation constants
+    float timestep;
     // FEM representation
-    fractureNode * nodes;
-    fractureElement * elements;
+    std::vector<fractureNode> nodes;
+    std::vector<fractureElement> elements;
     // Mesh representation
+    uint32_t numNodes;
+    uint32_t numElements;
+    uint32_t numTriangles;
+
+    void animate();
+    void packMesh();
+
 
 };
 
