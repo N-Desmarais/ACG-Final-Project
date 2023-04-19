@@ -38,6 +38,9 @@ fractureMesh::fractureMesh(MeshData * data) {
          p4 = &nodes[data->tetIndices[i+3]];
 
     auto e = fractureElement(p1,p2,p3,p4);
+
+    p1->addElement(&e);
+
     elements.push_back(e);
   }
 
