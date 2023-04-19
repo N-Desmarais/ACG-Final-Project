@@ -14,6 +14,7 @@ class OpenGLRenderer {
 
   // HELPER FUNCTIONS FOR RENDERING
   void setupVBOs();
+  void updateVBOs();
   void drawVBOs(const glm::mat4 &MVP,const glm::mat4 &M,const glm::mat4 &V);
   void cleanupVBOs();
 

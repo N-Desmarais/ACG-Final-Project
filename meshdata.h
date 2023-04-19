@@ -64,6 +64,7 @@ typedef struct MeshData {
   void Load(std::string input_file);
 
   bool animate;
+  float timestep;
 
 } MeshData;
 

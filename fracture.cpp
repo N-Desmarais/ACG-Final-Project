@@ -8,12 +8,12 @@
 #include "fracture.h"
 #include "triangle.h"
 #include "vertex.h"
+#include "argparser.h"
 
 using namespace std;
 
 
-fractureMesh::fractureMesh(MeshData * data, float timestep) {
-  this->timestep = timestep;
+fractureMesh::fractureMesh(MeshData * data) {
 
   for(uint32_t i = 0; i < data->positionCount; i+=3) {
     auto x = data->vertexPositions[i],
@@ -51,6 +51,7 @@ void fractureMesh::animate() {
   auto accelerations = vector<Vec3f>();
   auto velocities = vector<Vec3f>();
   auto positions = vector<Vec3f>();
+  auto timestep = GLOBAL_args->mesh_data->timestep;
 
   for(uint32_t i = 0; i < numNodes; i++) {
     auto particle = nodes[i];

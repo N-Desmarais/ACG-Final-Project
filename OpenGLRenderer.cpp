@@ -9,6 +9,11 @@
 #include "matrix.h"
 #include "boundingbox.h"
 
+
+extern "C" {
+void Animate();
+}
+
 // ====================================================================
 OpenGLRenderer::OpenGLRenderer(MeshData *_mesh_data, ArgParser *args) {
   mesh_data = _mesh_data;
@@ -53,6 +58,9 @@ OpenGLRenderer::OpenGLRenderer(MeshData *_mesh_data, ArgParser *args) {
     glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
     // pass the matrix to the draw routines (for further editing)
+    Animate();
+    updateVBOs();
+
     drawVBOs(MVP,ModelMatrix,ViewMatrix);
 
     // Swap buffers
@@ -73,7 +81,8 @@ OpenGLRenderer::OpenGLRenderer(MeshData *_mesh_data, ArgParser *args) {
 
 void OpenGLRenderer::setupVBOs() {
   HandleGLError("enter setupVBOs");
-  setupMesh();
+  glGenVertexArrays(1, &VaoId);
+  glGenBuffers(1, &VboId);
   HandleGLError("leaving setupVBOs");
 }
 
@@ -87,7 +96,6 @@ void OpenGLRenderer::drawVBOs(const glm::mat4 &mvp,const glm::mat4 &m,const glm:
   glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &m[0][0]);
   glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &v[0][0]);
-
   drawMesh();
   HandleGLError("leaving drawVBOs");
 }
@@ -101,13 +109,10 @@ void OpenGLRenderer::cleanupVBOs() {
 // ====================================================================
 
 
-void OpenGLRenderer::setupMesh() {
-  HandleGLError("enter setupMesh");
-  glGenVertexArrays(1, &VaoId);
+void OpenGLRenderer::updateVBOs() {
+  HandleGLError("enter updateMeshVBO");
   glBindVertexArray(VaoId);
-  glGenBuffers(1, &VboId);
   glBindBuffer(GL_ARRAY_BUFFER, VboId);
-
   int sizeOfVertices = 3*sizeof(glm::vec4) * GLOBAL_args->mesh->numTriangles;
   glBufferData(GL_ARRAY_BUFFER, sizeOfVertices, GLOBAL_args->mesh->tri_data.get(), GL_STATIC_DRAW);
   glEnableVertexAttribArray(0);
@@ -116,13 +121,15 @@ void OpenGLRenderer::setupMesh() {
   glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 3*sizeof(glm::vec4), (void*)sizeof(glm::vec4));
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 3*sizeof(glm::vec4), (void*)(sizeof(glm::vec4)*2));
-  HandleGLError("leaving setupMesh");
+  HandleGLError("exit updateMeshVBO");
 }
 
 void OpenGLRenderer::drawMesh() const {
   //std::cout << "draw mesh" << std::endl;
 
   HandleGLError("in drawMesh");
+  glBindVertexArray(VaoId);
+  glBindBuffer(GL_ARRAY_BUFFER, VboId);
   glDrawArrays(GL_TRIANGLES, 0, 3 * GLOBAL_args->mesh->numTriangles);
   HandleGLError("leaving drawMesh");
 }

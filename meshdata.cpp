@@ -11,6 +11,7 @@ void INIT_MeshData(MeshData *mesh_data) {
   mesh_data->perspective = true;
   mesh_data->triCount = 0;
   mesh_data->animate = false;
+  mesh_data->timestep = 0.1;
 }
 
 // NOTE: These functions are called by the Objective-C code, so we
@@ -27,7 +28,6 @@ extern "C" {
 
   void Step() {
     GLOBAL_args->mesh->animate();
-    PackMesh();
   }
 
   void Animate() {

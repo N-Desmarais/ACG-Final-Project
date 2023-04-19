@@ -32,24 +32,27 @@ ArgParser::ArgParser(int argc, const char *argv[], MeshData *_mesh_data) {
       auto output = std::string(argv[i]);
       Triangulator::Triangulate(input, output);
       exit(0);
-    } else {
-        std::cout << "ERROR: unknown command line argument "
-        << i << ": '" << argv[i] << "'" << std::endl;
-        exit(1);
-      }
+    } else if (std::string(argv[i]) == std::string("--time-step")) {
+      i++; assert (i < argc);
+      mesh_data->timestep = std::stof(std::string(argv[i]));
+    }else {
+      std::cout << "ERROR: unknown command line argument "
+      << i << ": '" << argv[i] << "'" << std::endl;
+      exit(1);
     }
+  }
 
   mesh_data->Load(path+"/"+input_file);
 
   GLOBAL_args = this;
 
-  mesh = new fractureMesh(mesh_data, 0.001);
+  mesh = new fractureMesh(mesh_data);
   mesh->packMesh(mesh_data);
 }
 
 void ArgParser::Load() {
     delete mesh;
-    mesh = new fractureMesh(mesh_data, 0.001);
+    mesh = new fractureMesh(mesh_data);
     mesh->packMesh(mesh_data);
 }
 

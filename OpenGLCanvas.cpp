@@ -6,12 +6,6 @@
 #include "OpenGLCamera.h"
 #include "OpenGLRenderer.h"
 
-extern "C" {
-void Animate();
-void Step();
-void Load();
-void PackMesh();
-}
 
 // ========================================================
 // static variables of OpenGLCanvas class
@@ -184,9 +178,9 @@ void OpenGLCanvas::mousemotionCB(GLFWwindow */*window*/, double x, double y) {
 // (without function name mangling confusion).
 
 extern "C" {
+void Animate();
+void Step();
 void Load();
-void Simplification();
-void LoopSubdivision();
 void PackMesh();
 }
 
@@ -228,7 +222,7 @@ void OpenGLCanvas::keyboardCB(GLFWwindow* /*window*/, int key, int /*scancode*/,
                 // reset system
                 Load();
                 break;
-            /*case '+': case '=':
+            case '+': case '=':
                 std::cout << "timestep doubled:  " << mesh_data->timestep << " -> ";
                 mesh_data->timestep *= 2.0;
                 std::cout << mesh_data->timestep << std::endl;
@@ -237,13 +231,15 @@ void OpenGLCanvas::keyboardCB(GLFWwindow* /*window*/, int key, int /*scancode*/,
                 std::cout << "timestep halved:  " << mesh_data->timestep << " -> ";
                 mesh_data->timestep /= 2.0;
                 std::cout << mesh_data->timestep << std::endl;
-                break;*/
+                break;
             case 'q':  case 'Q':
                 exit(0);
                 break;
             default:
                 std::cout << "UNKNOWN KEYBOARD INPUT  '" << (char)key << "'" << std::endl;
         }
+        PackMesh();
+        renderer->updateVBOs();
     }
 }
 

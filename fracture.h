@@ -69,7 +69,7 @@ private:
 
 class fractureMesh {
  public:
-    fractureMesh(MeshData * data, float timestep);
+    fractureMesh(MeshData * data);
 
     void animate();
     void packMesh(MeshData *data);
