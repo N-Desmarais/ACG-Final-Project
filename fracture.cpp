@@ -49,16 +49,40 @@ fractureMesh::fractureMesh(MeshData * data) {
   numTriangles = numElements * 4;
 }
 
+void fractureMesh::computeForces() {
+    for (uint32_t i = 0; i < numNodes; i++) {
+        nodes[i].setCollisionForce(Vec3f(0.0f, 0.0f, 0.0f));
+    }
+    double spring_constant = 1.0f;
+    for (uint32_t i = 0; i < numNodes; i++) {
+        auto node = nodes[i];
+        for (uint32_t j = 0; j < numElements; j++) {
+            auto element = &elements[j];
+            if (node.checkElement(element)) {
+                continue;
+            }
+            if (element->Intersection(node.getPosition())) {
+                Vec3f direction;
+                auto depth = element->penetrationDepth(node.getPosition(), direction);
+                Vec3f Force = direction * (spring_constant * depth);
+                for (uint32_t n = 0; n < 4; n++) {
+                    fractureNode *node2 = element->operator[](n);
+                    node2->setCollisionForce(Force *(1 / 4.0f));
+                }
+            }
+        }
+    }
+}
 
 void fractureMesh::animate() {
   auto accelerations = vector<Vec3f>();
   auto velocities = vector<Vec3f>();
   auto positions = vector<Vec3f>();
   auto timestep = GLOBAL_args->mesh_data->timestep;
-
+  computeForces();
   for(uint32_t i = 0; i < numNodes; i++) {
     auto particle = nodes[i];
-    auto force = Vec3f(0,-9.8,0); // TODO basic forces
+    auto force = Vec3f(0, -9.8, 0) + particle.getCollisionForce(); // TODO basic forces
     auto acceleration = force * (1/particle.getMass());
     auto new_vel = particle.getVelocity() + (acceleration * timestep);
     auto new_pos = particle.getPosition() + (new_vel * timestep);
