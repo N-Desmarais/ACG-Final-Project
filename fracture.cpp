@@ -44,9 +44,22 @@ fractureMesh::fractureMesh(MeshData * data) {
     elements.push_back(e);
   }
 
+  for(uint32_t i = 0; i < data->triIndCount; i += 3) {
+    auto p1 = &nodes[data->triIndices[i]],
+         p2 = &nodes[data->triIndices[i+1]],
+         p3 = &nodes[data->triIndices[i+2]];
+
+    auto t = fractureSurfaceTri(p1,p2,p3);
+
+    surfaceTris.push_back(t);
+  }
+
   numNodes = nodes.size();
   numElements = elements.size();
-  numTriangles = numElements * 4;
+  numSurfaceTris = surfaceTris.size();
+  numTriangles = numElements * 4 + numSurfaceTris;
+
+  updateBBox();
 }
 
 
@@ -75,13 +88,26 @@ void fractureMesh::animate() {
     particle->setPosition(positions[i]);
   }
 
+  updateBBox();
 }
 
-void fractureMesh::packMesh(MeshData *data) {
+void fractureMesh::packMesh() {
   auto num_data = 12 * 3 * numTriangles;
   tri_data = unique_ptr<float>(new float[num_data]);
 
   auto triangles = vector<Triangle>();
+  auto volume_deltas = vector<double>();
+
+  for(uint32_t i = 0; i < numSurfaceTris; i++) {
+      auto surfaceTri = surfaceTris[i];
+      auto p1 = new Vertex(surfaceTri[0]->getPosition()),
+           p2 = new Vertex(surfaceTri[1]->getPosition()),
+           p3 = new Vertex(surfaceTri[2]->getPosition());
+
+      auto t = Triangle(p1,p2,p3);
+
+      triangles.push_back(t);
+  }
 
   for(uint32_t i = 0; i < numElements; i++) {
     auto element = elements[i];
@@ -99,7 +125,16 @@ void fractureMesh::packMesh(MeshData *data) {
     triangles.push_back(t2);
     triangles.push_back(t3);
     triangles.push_back(t4);
+
+    auto delta = fabs(element.getOriginalVolume() - element.computeVolume());
+
+    volume_deltas.push_back(delta);
+    volume_deltas.push_back(delta);
+    volume_deltas.push_back(delta);
+    volume_deltas.push_back(delta);
   }
+
+
 
   float * current = tri_data.get();
 
@@ -110,20 +145,38 @@ void fractureMesh::packMesh(MeshData *data) {
     Vec3f b = t[1]->getPos();
     Vec3f c = t[2]->getPos();
 
+    auto center = Vec3f(0,0,0);
+    bbox.getCenter(center);
+
+    if(GLOBAL_args->cross_section && a.x() < center.x() && b.x() < center.x() && c.x() < center.x()) {
+      continue;
+    }
+
+    float color_r,color_g,color_b,color_a;
+
+    // color the surface white and the interior red based on volume delta
+    color_r = tri < numSurfaceTris ? 1.0 : 0.0;
+    color_g = tri < numSurfaceTris ? 1.0 : 0.0;
+    color_b = tri < numSurfaceTris ? 1.0 : 1.0;
+    color_a = tri < numSurfaceTris ? 1.0 : 0.5;
+
     // for flat shading
     Vec3f normal = t.getNormal();
     Vec3f na = normal;
     Vec3f nb = normal;
     Vec3f nc = normal;
 
-    float12 ta = { float(a.x()),float(a.y()),float(a.z()),1, float(na.x()),float(na.y()),float(na.z()),0, 1.0,1.0,1.0,1 };
-    float12 tb = { float(b.x()),float(b.y()),float(b.z()),1, float(nb.x()),float(nb.y()),float(nb.z()),0, 1.0,1.0,1.0,1 };
-    float12 tc = { float(c.x()),float(c.y()),float(c.z()),1, float(nc.x()),float(nc.y()),float(nc.z()),0, 1.0,1.0,1.0,1 };
+    float12 ta = { float(a.x()),float(a.y()),float(a.z()),1, float(na.x()),float(na.y()),float(na.z()),0, color_r,color_g,color_b,color_a };
+    float12 tb = { float(b.x()),float(b.y()),float(b.z()),1, float(nb.x()),float(nb.y()),float(nb.z()),0, color_r,color_g,color_b,color_a };
+    float12 tc = { float(c.x()),float(c.y()),float(c.z()),1, float(nc.x()),float(nc.y()),float(nc.z()),0, color_r,color_g,color_b,color_a };
     memcpy(current, &ta, sizeof(float)*12); current += 12;
     memcpy(current, &tb, sizeof(float)*12); current += 12;
     memcpy(current, &tc, sizeof(float)*12); current += 12;
   }
 
+}
+
+void fractureMesh::updateBBox() {
   bbox = BoundingBox();
 
   for(uint32_t i = 0; i < numNodes; i++) {
@@ -133,9 +186,9 @@ void fractureMesh::packMesh(MeshData *data) {
   Vec3f center;
   bbox.getCenter(center);
 
-  data->bb_center.data[0] = center.x();
-  data->bb_center.data[1] = center.y();
-  data->bb_center.data[2] = center.z();
+  GLOBAL_args->mesh_data->bb_center.data[0] = center.x();
+  GLOBAL_args->mesh_data->bb_center.data[1] = center.y();
+  GLOBAL_args->mesh_data->bb_center.data[2] = center.z();
 
-  data->bb_scale = 1.8 / float(bbox.maxDim());
+  GLOBAL_args->mesh_data->bb_scale = 1.8 / float(bbox.maxDim());
 }

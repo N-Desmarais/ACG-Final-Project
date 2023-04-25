@@ -65,6 +65,7 @@ typedef struct MeshData {
 
   bool animate;
   float timestep;
+  float min_y;
 
 } MeshData;
 

@@ -36,6 +36,8 @@ class ArgParser {
   std::string input_file;
   std::string path;
 
+  bool cross_section = false;
+
   void Load();
 };
 

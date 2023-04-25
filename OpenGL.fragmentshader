@@ -17,6 +17,7 @@ uniform int wireframe;
 
 void main() {
 
+
   // Light emission properties
   // You probably want to put them as uniforms
   vec3 LightColor = vec3(1,1,1);
@@ -26,20 +27,7 @@ void main() {
   vec3 n = normalize( Normal_cameraspace );
 
   // Material properties
-  vec3 MaterialDiffuseColor;
-  if ( (wireframe == 0) ||
-       ( mycolor.x > 0.1 &&
-       mycolor.y > 0.1 &&
-       mycolor.z > 0.1) ) {
-    MaterialDiffuseColor = 0.7 * vec3(1,1,1);
-  } else {
-    MaterialDiffuseColor = mycolor.xyz;
-    if (mycolor.x < 0.1 &&
-        mycolor.y < 0.1 &&
-        mycolor.z < 0.1) {
-      MaterialDiffuseColor *= 7.0;
-    }
-  }
+  vec3 MaterialDiffuseColor = mycolor.xyz;
 
   vec3 MaterialAmbientColor = vec3(0.2,0.2,0.2) * MaterialDiffuseColor;
   vec3 MaterialSpecularColor = vec3(0.1,0.1,0.1);
@@ -81,5 +69,5 @@ void main() {
     // Specular : reflective highlight, like a mirror
     MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,5) / (distance*distance);
 
-  out_color = vec4(mycolor2,1);
+  out_color = vec4(mycolor2,mycolor.w);
 }

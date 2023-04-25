@@ -23,7 +23,7 @@ void INIT_MeshData(MeshData *mesh_data) {
 extern "C" {
   void PackMesh() {
     printf ("Pack Mesh\n");
-    GLOBAL_args->mesh->packMesh(GLOBAL_args->mesh_data);
+    GLOBAL_args->mesh->packMesh();
   }
 
   void Step() {
@@ -52,6 +52,7 @@ void MeshData::Load(std::string input_file) {
   triIndCount = 0;
   tetCount = 0;
   tetIndCount = 0;
+  min_y = 0;
 
   auto nodes = input_file + ".node",
        tris = input_file + ".face",
@@ -76,8 +77,12 @@ void MeshData::Load(std::string input_file) {
     vertexPositions.push_back(x);
     vertexPositions.push_back(y);
     vertexPositions.push_back(z);
+
+    if(y < min_y) min_y = y;
   }
   infile.close();
+
+  min_y -= 5; // floor y
 
   // triangles
   infile = std::ifstream(tris);

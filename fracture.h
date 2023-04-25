@@ -44,12 +44,14 @@ class fractureElement {
 public:
     fractureElement(fractureNode * p1,fractureNode * p2,fractureNode * p3,fractureNode * p4) {
         nodes = std::vector<fractureNode *> {p1,p2,p3,p4};
+        originial_volume = computeVolume();
     }
     // Accessors
     fractureNode * operator[](unsigned int i) {
         assert(i < 4);
         return nodes[i];
     }
+    double getOriginalVolume() const { return originial_volume; }
     // Volume calculation taken from O'Brien
     double computeVolume() {
         fractureNode n1 = *nodes[0],
@@ -86,7 +88,22 @@ public:
     }
 
 private:
+    double originial_volume;
     std::vector<fractureNode *> nodes;
+};
+
+class fractureSurfaceTri {
+ public:
+  fractureSurfaceTri(fractureNode * p1,fractureNode * p2,fractureNode * p3) {
+    nodes = std::vector<fractureNode *> {p1,p2,p3};
+  }
+  fractureNode * operator[](unsigned int i) {
+    assert(i < 3);
+    return nodes[i];
+  }
+
+ private:
+  std::vector<fractureNode *> nodes;
 };
 
 class fractureMesh {
@@ -94,7 +111,8 @@ class fractureMesh {
     fractureMesh(MeshData * data);
 
     void animate();
-    void packMesh(MeshData *data);
+    void packMesh();
+    void updateBBox();
 
     // public so it can be seen by renderer
     std::unique_ptr<float> tri_data;
@@ -105,9 +123,11 @@ class fractureMesh {
     // FEM representation
     std::vector<fractureNode> nodes;
     std::vector<fractureElement> elements;
+    std::vector<fractureSurfaceTri> surfaceTris;
     // Mesh representation
     uint32_t numNodes;
     uint32_t numElements;
+    uint32_t numSurfaceTris;
     BoundingBox bbox;
 };
 

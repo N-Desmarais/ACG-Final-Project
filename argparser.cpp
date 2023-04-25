@@ -35,10 +35,13 @@ ArgParser::ArgParser(int argc, const char *argv[], MeshData *_mesh_data) {
     } else if (std::string(argv[i]) == std::string("--time-step")) {
       i++; assert (i < argc);
       mesh_data->timestep = std::stof(std::string(argv[i]));
-    }else {
-      std::cout << "ERROR: unknown command line argument "
-      << i << ": '" << argv[i] << "'" << std::endl;
-      exit(1);
+    } else if (std::string(argv[i]) == std::string("--cross-section")) {
+      i++; assert (i < argc);
+      cross_section = true;
+    } else {
+        std::cout << "ERROR: unknown command line argument "
+        << i << ": '" << argv[i] << "'" << std::endl;
+        exit(1);
     }
   }
 
@@ -47,13 +50,13 @@ ArgParser::ArgParser(int argc, const char *argv[], MeshData *_mesh_data) {
   GLOBAL_args = this;
 
   mesh = new fractureMesh(mesh_data);
-  mesh->packMesh(mesh_data);
+  mesh->packMesh();
 }
 
 void ArgParser::Load() {
     delete mesh;
     mesh = new fractureMesh(mesh_data);
-    mesh->packMesh(mesh_data);
+    mesh->packMesh();
 }
 
 void ArgParser::separatePathAndFile(const std::string &input, std::string &path, std::string &file) {
