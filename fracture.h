@@ -21,6 +21,7 @@ public:
     const Vec3f& getPosition() const{ return position; }
     const Vec3f& getVelocity() const{ return velocity; }
     const Vec3f& getAcceleration() const { return acceleration; }
+    const Vec3f& getCollisionForce() const { return collision_force; }
     double getMass() const { return mass; }
     std::vector<fractureElement *> getElements() { return adjacent_elements; }
     // Modifiers
@@ -28,14 +29,24 @@ public:
     void setPosition(const Vec3f &p) { position = p; }
     void setVelocity(const Vec3f &v) { velocity = v; }
     void setAcceleration(const Vec3f &a) { acceleration = a; }
+    void setCollisionForce(const Vec3f &f) { collision_force = f; }
     void setMass(double m) { mass = m; }
     void addElement(fractureElement * element) { adjacent_elements.push_back(element); }
+
+    bool checkElement(fractureElement * element) {
+        for (uint32_t i = 0; i < adjacent_elements.size(); i++) {
+            if (element == adjacent_elements[i]) {
+                return true;
+            }
+        }
+    }
 private:
     // Rep
     Vec3f original_position;
     Vec3f position;
     Vec3f velocity;
     Vec3f acceleration;
+    Vec3f collision_force;
     std::vector<fractureElement *> adjacent_elements;
     double mass;
 };
@@ -70,6 +81,7 @@ public:
     {
         Vec3f normal;
         Vec3f::Cross3(normal, v2 - v1, v3 - v1);
+        normal.Normalize();
         double dotV4 = normal.Dot3(v4 - v1);
         double dotP = normal.Dot3(p - v1);
         return (dotV4 * dotP) > 0;
@@ -85,6 +97,41 @@ public:
             SameSide(v2, v3, v4, v1, p) &&
             SameSide(v3, v4, v1, v2, p) &&
             SameSide(v4, v1, v2, v3, p);
+    }
+
+    double planeDistance(Vec3f v1, Vec3f v2, Vec3f v3, Vec3f p, Vec3f &direction) {
+        Vec3f normal;
+        Vec3f::Cross3(normal, v2 - v1, v3 - v1);
+        normal.Normalize();
+        direction = normal;
+        return normal.Dot3(p - v1);
+    }
+
+    double penetrationDepth(Vec3f p, Vec3f &direction) {
+        Vec3f v1 = nodes[0]->getPosition();
+        Vec3f v2 = nodes[1]->getPosition();
+        Vec3f v3 = nodes[2]->getPosition();
+        Vec3f v4 = nodes[3]->getPosition();
+        Vec3f potential_direction;
+        double min_dist = planeDistance(v1, v2, v3, p, potential_direction);
+        direction = potential_direction;
+        double check = planeDistance(v2, v3, v4, p, potential_direction);
+        if (check < min_dist) {
+            min_dist = check;
+            direction = potential_direction;;
+        }
+        check = planeDistance(v3, v4, v1, p, potential_direction);
+        if (check < min_dist) {
+            min_dist = check;
+            direction = potential_direction;;
+        }
+        check = planeDistance(v4, v1, v2, p, potential_direction);
+        if (check < min_dist) {
+            min_dist = check;
+            direction = potential_direction;;
+        }
+        direction *= -1.0f;
+        return min_dist;
     }
 
 private:
@@ -113,6 +160,7 @@ class fractureMesh {
     void animate();
     void packMesh();
     void updateBBox();
+    void computeForces();
 
     // public so it can be seen by renderer
     std::unique_ptr<float> tri_data;
